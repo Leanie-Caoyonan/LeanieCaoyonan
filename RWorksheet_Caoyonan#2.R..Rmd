@@ -42,10 +42,5 @@ print(age[-1])
 
 #Output
 ```
-```{r}
-#4
-x <- c("first"=3, "second"=0, "third"=9).
-x
-#Output
-```
+
 

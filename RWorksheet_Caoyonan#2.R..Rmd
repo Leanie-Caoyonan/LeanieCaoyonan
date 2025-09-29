@@ -1,6 +1,6 @@
 ---
 title: "RWorksheet_Caoyonan#2.R."
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -45,7 +45,6 @@ print(age[-1])
 ```{r}
 #4
 x <- c("first"=3, "second"=0, "third"=9).
-
 x
 #Output
 ```

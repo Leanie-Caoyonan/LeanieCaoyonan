@@ -1,0 +1,138 @@
+---
+title: "RWorksheet_Caoyonan#3b.Rmd"
+author: "Leanie G. Caoyonan"
+date: "2025-10-13"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+#1. Create a data frame using the table below.
+
+#a. Write the codes.
+household <- data.frame(
+  Sex = c("Male", "Female", "Male", "Female",    "Male"),
+  
+  Types_of_Houses = c("Wood", "Concrete", "Semi-Concrete", "Wood", "Concrete"),
+  
+  Fathers_Occupation = c("Farmer", "Driver", "Others", "Farmer", "Driver"),
+  
+  Num_Siblings_Attending = c(4, 6, 5, 3, 7)
+) 
+
+
+#b. Describe the data. Get the structure or the summary of the data
+str(household)
+summary(household)
+
+
+#c. Is the mean number of siblings attending is 5?
+mean(household$Num_Siblings_Attending) == 5
+
+
+#d. Extract the 1st two rows and then all the columns using the sub-setting functions. Write the codes and its output.
+household[1:2, ]
+
+
+#e. Extract 3rd and 5th row with 2nd and 4th column. Write the codes and its result.
+household[c(3,5), c(2,4)]
+#Output: 
+#       Types_of_Houses
+#     3  Semi_Concrete
+#     5  Concrete
+
+
+#f. Select the variable types of houses then store the vector that results as types_houses. Write the codes.
+types_houses <- household$Types_of_Houses
+types_houses
+#Output: 
+#[1] "Wood"          "Concrete"     
+#[3] "Semi-Concrete" "Wood"         
+#[5] "Concrete" 
+
+
+#g. Select only all Males respondent that their father occupation was farmer. Write the codes and its output.
+subset(household, Sex == "Male" & Fathers_Occupation == "Farmer")
+#Output:
+
+#     Sex        Types_of_Houses
+#  1  Male      Wood
+
+
+#h. Select only all females respondent that have greater than or equal to 5 number of siblings attending school. Write the codes and its outputs.
+subset(household, Sex == "Female" & Num_Siblings_Attending >= 5)
+#Output:
+#       Sex       Types_of_Houses
+#    2  Female    Concrete
+
+
+#2. Write a R program to create an empty data frame. Using the following codes:
+
+df <- data.frame(
+  Ints = integer(),
+  Doubles = double(),
+  Characters = character(),
+  Logicals = logical(),
+  Factors = factor(),
+  stringsAsFactors = FALSE
+)
+
+print("Structure of the empty dataframe:")
+str(df)
+
+
+#a. Describe the results.
+#Describe: The result shows that the empty data frame has 0 rows and 5 columns with different data types.
+
+
+#3. Create a .csv file of this. Save it as HouseholdData.csv
+write.csv(household, "HouseholdData.csv", row.names = FALSE)
+
+
+#a. Import the csv file into the R environment. Write the codes.
+HouseholdData <- read.csv("HouseholdData.csv")
+HouseholdData
+
+
+#b. Convert the Sex into factor using factor() function and change it into integer.[Legend: Male = 1 and Female = 2]. Write the R codes and its output.
+HouseholdData$Sex <- factor(HouseholdData$Sex, levels = c("Male", "Female"), labels = c(1, 2))
+HouseholdData
+#Output: 
+
+
+#c. Convert the Type of Houses into factor and change it into integer. [Legend: Wood = 1; Congrete = 2; Semi-Congrete = 3]. Write the R codes and its output.
+HouseholdData$Types_of_Houses <- factor(
+  HouseholdData$Types_of_Houses,
+  levels = c("Wood", "Concrete", "Semi-Concrete"),
+  labels = c(1, 2, 3)
+)
+HouseholdData
+#Output:
+
+
+#d. On father’s occupation, factor it as Farmer = 1; Driver = 2; and Others = 3. What is the R code and its output?
+HouseholdData$Fathers_Occupation <- factor(
+  HouseholdData$Fathers_Occupation,
+  levels = c("Farmer", "Driver", "Others"),
+  labels = c(1, 2, 3)
+)
+HouseholdData
+#Output:
+
+
+#e. Select only all females respondent that has a father whose occupation is driver. Write the codes and its output.
+subset(HouseholdData, Sex == 2 & Fathers_Occupation == 2)
+#Output: 
+
+
+#f. Select the respondents that have greater than or equal to 5 number of siblings attending school. Write the codes and its output.
+subset(HouseholdData, Num_Siblings_Attending >= 5)
+#Output: 
+
+
+```
+

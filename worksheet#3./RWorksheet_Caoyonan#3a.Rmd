@@ -1,0 +1,14 @@
+---
+title: "RWorksheet_Caoyonan#3a.Rmd"
+author: "Leanie G. Caoyonan"
+date: "2025-10-13"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```
+
+```

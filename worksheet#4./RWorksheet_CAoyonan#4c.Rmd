@@ -1,0 +1,200 @@
+---
+title: "RWorksheet_CAoyonan#4c"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=TRUE}
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(readxl)
+```
+
+
+```{r}
+# 1. Import mpg CSV
+
+mpg <- read_csv("mpg.csv")
+
+# 1b. Categorical variables
+categorical_vars <- c("manufacturer", "model", "trans", "drv", "fl", "class")
+categorical_vars
+
+# 1c. Continuous variables
+continuous_vars <- c("displ", "year", "cyl", "cty", "hwy")
+continuous_vars
+
+```
+
+```{r}
+
+# 2. Manufacturer with most models
+
+# 2a. Group and count models
+manu_models <- mpg %>%
+  group_by(manufacturer) %>%
+  summarise(unique_models = n_distinct(model)) %>%
+  arrange(desc(unique_models))
+
+manu_models
+
+# 2b. Base R plot
+plot(manu_models$unique_models, type="b",
+     xaxt="n", xlab="Manufacturer", ylab="Unique Models",
+     main="Unique Models per Manufacturer")
+axis(1, at=1:nrow(manu_models), labels=manu_models$manufacturer, las=2)
+
+# 2b. ggplot version
+ggplot(manu_models, aes(x=reorder(manufacturer, -unique_models), y=unique_models)) +
+  geom_col(fill="steelblue") +
+  theme(axis.text.x = element_text(angle=45, hjust=1)) +
+  labs(title="Unique Models per Manufacturer",
+       x="Manufacturer", y="Unique Models")
+
+```
+
+```{r}
+# 3. Relationship between model and manufacturer
+
+# 3a. Initial plot
+ggplot(mpg, aes(model, manufacturer)) + geom_point()
+
+# 3b. Improved version (remove duplicates)
+mpg_unique <- mpg %>% distinct(model, manufacturer)
+
+ggplot(mpg_unique, aes(model, manufacturer)) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle=90)) +
+  labs(title="Unique Model-Manufacturer Combinations")
+
+```
+
+```{r}
+# 4. Plot model vs year (top 20)
+
+top20 <- mpg %>% slice(1:20)
+
+ggplot(top20, aes(x=model, y=year)) +
+  geom_point() +
+  theme(axis.text.x = element_text(angle=90)) +
+  labs(title="Model vs Year (Top 20 Rows)",
+       x="Model", y="Year")
+
+```
+
+```{r}
+# 5. Group by model and count
+
+model_count <- mpg %>%
+  group_by(model) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n))
+
+model_count
+
+top20_models <- model_count %>% slice(1:20)
+
+# 5a. Bar plot
+ggplot(top20_models, aes(x=reorder(model, n), y=n)) +
+  geom_bar(stat="identity", fill="purple") +
+  labs(title="Top 20 Models by Count",
+       x="Model", y="Count") +
+  theme(axis.text.x = element_text(angle=90))
+
+# 5b. Bar plot flipped
+ggplot(top20_models, aes(x=reorder(model, n), y=n)) +
+  geom_bar(stat="identity", fill="darkgreen") +
+  coord_flip() +
+  labs(title="Top 20 Models by Count (Flipped)",
+       x="Model", y="Count")
+
+```
+
+```{r}
+# 6. cyl vs displ
+
+ggplot(mpg, aes(x=cyl, y=displ, color=displ)) +
+  geom_point() +
+  labs(title="Relationship between No. of Cylinders and Engine Displacement",
+       x="Cylinders", y="Engine Displacement")
+
+```
+
+```{r}
+# 7. displ vs hwy mapped to continuous variable
+
+ggplot(mpg, aes(x=displ, y=hwy, color=cty)) +
+  geom_point() +
+  labs(title="Engine Displacement vs Highway MPG",
+       x="Engine Displacement", y="Highway MPG",
+       color="City MPG")
+
+```
+
+```{r}
+
+# 8. Import traffic.csv
+
+traffic <- read.csv("traffic.csv")
+
+# 8a. Observations and variables
+nrow(traffic)
+ncol(traffic)
+names(traffic)
+traffic <- read.csv("traffic.csv")
+
+# 8b. Subset by junction
+junctions <- split(traffic, traffic$junction)
+junctions
+
+# 8c. Plot each junction
+ggplot(traffic, aes(x=date, y=vehicles, color=junction)) +
+  geom_line() +
+  labs(title="Traffic Count per Junction",
+       x="Date", y="Vehicles")
+
+```
+
+```{r}
+# 9. Import alexa_file.xlsx
+
+alexa <- read_excel("alexa_file.xlsx")
+
+# 9a. Observations and columns
+nrow(alexa)
+ncol(alexa)
+
+# 9b. Group variations
+var_total <- alexa %>%
+  group_by(variation) %>%
+  summarise(total = n())
+
+var_total
+
+# 9c. Plot variations
+ggplot(var_total, aes(x=reorder(variation, total), y=total)) +
+  geom_col(fill="orange") +
+  coord_flip() +
+  labs(title="Total Reviews per Variation",
+       x="Variation", y="Total Reviews")
+
+# 9d. Line plot for verified reviews over time
+ggplot(alexa, aes(x=date, y=verified_reviews)) +
+  geom_line() +
+  labs(title="Verified Reviews Over Time",
+       x="Date", y="Verified Reviews")
+
+# 9e. Variation vs Ratings
+var_rating <- alexa %>%
+  group_by(variation) %>%
+  summarise(avg_rating = mean(rating, na.rm=TRUE))
+
+ggplot(var_rating, aes(x=reorder(variation, avg_rating), y=avg_rating)) +
+  geom_col(fill="skyblue") +
+  coord_flip() +
+  labs(title="Average Rating per Variation",
+       x="Variation", y="Average Rating")
+```
+
